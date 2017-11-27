@@ -54,7 +54,7 @@ const createPoints=function(count){
       if(num===0)
         return [];
       arr[num-1]={
-        x: (rand(10))*80+350,
+        x: (rand(10))*80+(canvas.width-900)/2,
         y: (canvas.height-700)/2-100,
         width: 70,
         height: 70,
