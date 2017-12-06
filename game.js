@@ -1,13 +1,13 @@
 // Violeta
 // this is for the random color page 
-        const rand = function () {
+        const randCol = function () {
            return Math.round(Math.random() * 255);
 
         }
         setInterval(function () {
-            var red = rand(255);
-            var green = rand(255);
-            var blue = rand(255);
+            var red = randCol(255);
+            var green = randCol(255);
+            var blue = randCol(255);
            var color = "background:rgb(" + red + "," + green + "," + blue + ");";
            var element = document.getElementById("body");
            
@@ -22,7 +22,7 @@ const canvas=document.getElementById('canvas')
 const ctx=canvas.getContext("2d")
 canvas.width= window.innerWidth;
 canvas.height=window.innerHeight;
-
+let start=true;
 
 
 const bg = {
