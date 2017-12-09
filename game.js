@@ -54,26 +54,30 @@ const updateBack = function () {
               bg2.y = canvas.height;
            }
         }
-//Harut-stones
 
+//Harut-stones
 const rand = function(num) {
-  return Math.floor(Math.random() * num) + 1;
+  return Math.floor(Math.random()*num) + 1;
 };
 let score=0;
 let countRow=1;
+let hearts=3;
 let onload= false;
 const asteroidImg=new Image();
 asteroidImg.src="asteroid.png";
 
 const badGuyImg=new Image();
 badGuyImg.src="BadGuyImage.png"
+
+const heartImg=new Image();
+heartImg.src="heart.png"
 //create stones
 const level=function(str){
   if(str==="bg"){
     return Math.min(2+Math.floor(score/90), 7)
   }
   else if(str==="stoneSpeed"){
-    return Math.min(rand(2)+0.5+Math.floor(score/80)/2, 7)
+    return Math.min(Math.floor(rand(200)/10)/10+0.5+Math.floor(score/80)/2, 7)
   }
   else if(str==="stoneNum")
     return Math.min(rand(4)+Math.floor(score/120), 7)
@@ -142,15 +146,19 @@ heroImg.src = "ship1.png";
 
 const fillArray=function(array){
 	array.length+=1;
-  if(countRow%8!==0)
-	 array[array.length-1]=createPoints(level("stoneNum"), asteroidImg)
-  else {
+  if(countRow%8===0){
     array[array.length-1]=createPoints(1, badGuyImg)
     var badBullet=new bullet();
     badBullet.x=array[array.length-1][0].x+35;
     badBullet.y=array[array.length-1][0].y+35;
     bullBadGuy.length++;
     bullBadGuy[bullBadGuy.length-1]=badBullet;
+  }
+  else if(countRow%10===0){
+        array[array.length-1]=createPoints(1, heartImg)
+  }
+  else{
+      array[array.length-1]=createPoints(level("stoneNum"), asteroidImg)
   }
   countRow++;
 	return array;
@@ -163,8 +171,6 @@ explosionImg.src="explosion.png"
 
 
 const drawStones=function(){
-  //ctx.clearRect(0,0,canvas.width, canvas.height)
-//  ctx.fillRect((canvas.width-900)/2, 0, 900,canvas.height)
   ctx.drawImage(heroImg, hero.x, hero.y, hero.width, hero.height);
   array.forEach(function(point){
     point.forEach(function(place){
@@ -172,6 +178,9 @@ const drawStones=function(){
         ctx.drawImage(place.img, place.imgSx,place.imgSy, 166.6, 164, place.x, place.y, 70, 70)
       else if(!place.hide && place.img===badGuyImg)
         ctx.drawImage(place.img, place.x, place.y, 70,70)
+      else if(!place.hide && place.img===heartImg){
+        ctx.drawImage(place.img, place.x, place.y, place.width, place.height)
+      }
     })
   });
   for(let i=0; i<bull.length; i++){
@@ -193,14 +202,24 @@ const drawStones=function(){
     if(!bullBadGuy[i].hide)
     ctx.drawImage(bulletImg, bullBadGuy[i].x,bullBadGuy[i].y, bullBadGuy[i].width,bullBadGuy[i].height)
   }
+    for(let i=0; i<=hearts-1; i++){
+      ctx.drawImage(heartImg, (canvas.width-900)/2+50*i, canvas.height-40, 40, 40)
+  }
 }
 const updateStones=function(){
+  //Ani-hero
   if(hero.y<=10){
     hero.y = 10;
   }
   if(hero.y >=canvas.height-hero.height){
     hero.y = canvas.height-hero.height;
   }
+  //Elina-heart
+  if(hearts<=0){
+    alert("Game over")
+    start=false;
+  }
+  //Harut-stones
   for(let i=array.length-1; i>=0; i--){
     for(let j=array[i].length-1; j>=0; j--){
     array[i][j].y+=array[i][j].yDelta
@@ -215,7 +234,7 @@ const updateStones=function(){
       array[i][j].countImg++;
     };
     for(let k=bull.length-1; k>=0; k--){
-      if (!bull[k].hide && !array[i][j].hide && bull[k].x <= array[i][j].x + array[i][j].width  && bull[k].x + bull[k].width  >= array[i][j].x &&
+      if (array[i][j].img!==heartImg && !bull[k].hide && !array[i][j].hide && bull[k].x <= array[i][j].x + array[i][j].width  && bull[k].x + bull[k].width  >= array[i][j].x &&
      bull[k].y <= array[i][j].y + array[i][j].height && bull[k].y + bull[k].height >= array[i][j].y){
        array[i][j].hide=true;
        bull[k].hide=true;
@@ -234,9 +253,14 @@ const updateStones=function(){
     }
     if(!array[i][j].hide && hero.x < array[i][j].x + array[i][j].width &&  hero.x + hero.width > array[i][j].x &&
        hero.y + hero.height > array[i][j].y  && hero.y < array[i][j].y + array[i][j].height){
-            alert("Game over")
+         //Elina-heart
+         if(array[i][j].img===heartImg){
+           hearts++;
+         }
+         else{
+           hearts--;
+         }
             array[i][j].hide=true
-            start=false;
     }
     if((array[i][j].y>=canvas.height || array[i][j].hide)&& array[i].length!==1){
         array[i].splice(j,1)
@@ -255,9 +279,9 @@ const updateStones=function(){
     bullBadGuy[i].y+=bullBadGuy[i].yDelta;
     if(!bullBadGuy[i].hide && hero.x < bullBadGuy[i].x + bullBadGuy[i].width &&  hero.x + hero.width > bullBadGuy[i].x &&
        hero.y + hero.height > bullBadGuy[i].y  && hero.y < bullBadGuy[i].y + bullBadGuy[i].height){
-          alert("Game over")
+            hearts--;
             bullBadGuy[i].hide=true
-            start=false;
+
     }
   }
 
@@ -314,5 +338,5 @@ const animate=function(){
   requestAnimationFrame(animate);
 
 }
-debugger;
+
 animate();
