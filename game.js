@@ -83,6 +83,7 @@ const level=function(str){
     return Math.min(rand(4)+Math.floor(score/120), 7)
 }
 const array=[];
+const explosionArr=[];
 const createPoints=function(count, image){
   const arr=[];
   const loop=function(num, arr){
@@ -115,7 +116,10 @@ const hero = {
   width: 110,
   height: 110,
   xDelta: 0,
-  yDelta: 0
+  yDelta: 0,
+  opacity: 1,
+  opacityDelta: -0.04,
+  collided: false
 
 };
 
@@ -129,16 +133,17 @@ function bullet(){
   this.width=20;
   this.height=80;
   this.hide=false;
-  this.yDelta=20;
-  this.audio=false;
-  this.explosion={
-      imgSx: 0,
-      imgSy: 0,
-      imgDx: 0,
-      imgDy: 0,
-      imgwidth: 100,
-      imgheight: 100
-  }
+  this.yDelta=20
+}
+function explosion(){
+    this.x= 0;
+    this.y= 0
+    this.imgSx= 0
+    this.imgSy= 0
+    this.imgDx= 0
+    this.imgDy= 0
+    this.imgwidth= 100
+    this.imgheight= 100
 }
 
 const heroImg = new Image();
@@ -171,7 +176,9 @@ explosionImg.src="explosion.png"
 
 
 const drawStones=function(){
+  ctx.globalAlpha = hero.opacity;
   ctx.drawImage(heroImg, hero.x, hero.y, hero.width, hero.height);
+  ctx.globalAlpha = 1.0;
   array.forEach(function(point){
     point.forEach(function(place){
       if(!place.hide && place.img===asteroidImg)
@@ -187,17 +194,18 @@ const drawStones=function(){
     if(!bull[i].hide){
     ctx.drawImage(bulletImg, bull[i].x,bull[i].y, bull[i].width,bull[i].height)
   }
-    else {
-      if(bull[i].explosion.imgSx===900){
-        if(bull[i].explosion.imgSy!==900){
-        bull[i].explosion.imgSx=0
-        bull[i].explosion.imgSy+=100
+  }
+  for(let i=0; i<explosionArr.length; i++){
+      if(explosionArr[i].imgSx===900){
+        if(explosionArr[i].imgSy!==900){
+          explosionArr[i].imgSx=0
+          explosionArr[i].imgSy+=100
       }
     }
-      ctx.drawImage(explosionImg, bull[i].explosion.imgSx, bull[i].explosion.imgSy, 100,100, bull[i].explosion.imgDx, bull[i].explosion.imgDy, bull[i].explosion.imgwidth, bull[i].explosion.imgheight)
-      bull[i].explosion.imgSx+=100
+      ctx.drawImage(explosionImg, explosionArr[i].imgSx, explosionArr[i].imgSy, 100,100, explosionArr[i].imgDx, explosionArr[i].imgDy, explosionArr[i].imgwidth, explosionArr[i].imgheight)
+      explosionArr[i].imgSx+=100
     }
-  }
+
   for(let i=0; i<bullBadGuy.length; i++){
     if(!bullBadGuy[i].hide)
     ctx.drawImage(bulletImg, bullBadGuy[i].x,bullBadGuy[i].y, bullBadGuy[i].width,bullBadGuy[i].height)
@@ -238,27 +246,38 @@ const updateStones=function(){
      bull[k].y <= array[i][j].y + array[i][j].height && bull[k].y + bull[k].height >= array[i][j].y){
        array[i][j].hide=true;
        bull[k].hide=true;
-       bull[k].explosion.imgDx=array[i][j].x
-       bull[k].explosion.imgDy=array[i][j].y
+       var a=new explosion();
+       a.imgDx=array[i][j].x
+       a.imgDy=array[i][j].y
+       explosionArr.length++;
+       explosionArr[explosionArr.length-1]=a;
        score+=10
      }
 
     }
-    if(array[i][j].img===badGuyImg && !array[i][j].hide &&bullBadGuy[bullBadGuy.length-1].y>=400+array[i][j].y){
+    if(array[i][j].img===badGuyImg && !array[i][j].hide &&bullBadGuy[bullBadGuy.length-1].y>=700+array[i][j].y){
       var badBullet=new bullet();
       badBullet.x=array[i][j].x+35;
       badBullet.y=array[i][j].y+35;
+      badBullet.yDelta=15;
       bullBadGuy.length++;
       bullBadGuy[bullBadGuy.length-1]=badBullet;
     }
-    if(!array[i][j].hide && hero.x < array[i][j].x + array[i][j].width &&  hero.x + hero.width > array[i][j].x &&
+    if(!hero.collided && !array[i][j].hide && hero.x < array[i][j].x + array[i][j].width &&  hero.x + hero.width > array[i][j].x &&
        hero.y + hero.height > array[i][j].y  && hero.y < array[i][j].y + array[i][j].height){
          //Elina-heart
          if(array[i][j].img===heartImg){
            hearts++;
+           score+=10;
          }
          else{
            hearts--;
+           hero.collided=true;
+           var a=new explosion();
+           a.imgDx=array[i][j].x
+           a.imgDy=array[i][j].y
+           explosionArr.length++;
+           explosionArr[explosionArr.length-1]=a;
          }
             array[i][j].hide=true
     }
@@ -268,10 +287,21 @@ const updateStones=function(){
 
     }
   }
+      if(hero.collided){
+        hero.opacity+=hero.opacityDelta;
+        if(hero.opacity<=0.1){
+          hero.opacityDelta=-hero.opacityDelta
+        }
+        if(hero.opacity>=1){
+          hero.collided=false;
+          hero.opacityDelta=-hero.opacityDelta
+        }
+      }
+      //Create new stones
       if(array[array.length-1][array[array.length-1].length-1].y>=(canvas.height+700)/2-650){
         fillArray(array);
       }
-
+//Bad Guys
   for(let i=0; i<bull.length; i++){
     bull[i].y-=bull[i].yDelta;
   }
