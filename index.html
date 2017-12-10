@@ -1,139 +1,173 @@
 <!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <style>
-  #canvas{
-            width:55%;
-            margin-top:5%;
-            margin-left:20%;
-            border: 5px solid black;
-  }
-    
-    
-      #body{
-             
-             position:relative;
-             background-color:#FF9933;
-             transition:1s;
-          
-             
+    <meta charset="utf-8" />
+    <title></title>
+    <script>
+  const randCol = function () {
+    return Math.round(Math.random() * 255);
 
     }
-        a{
-            font-family: "Times New Roman", Times, serif;
-            color:#f5f5f5;
-            text-decoration:none;
-        }
-        #button:hover{
-            filter:blur(2px);
-        }
-        #button{
-           position:absolute;
-            border:solid 1px #f5f5f5;
-            font-size:100px;
-            margin-top:40%;
-            margin-left:40%;
-            margin-right:40%;
-            
-            
-        }
-       
-         
-            
-        
-        #about{
-           
-            position:fixed;
-            color:#f5f5f5;
-            margin-top:3%;
-            margin-left:45%;
-            font-size:250%;
-            font-family:"Times New Roman", Times, serif;
 
-        }
-  
-         #overlay{
-        position: absolute;
-        bottom: 0;
-        left:0;
-        right:0 ;
-        background-color: #F5F5F5;
-        opacity:0.3;
-        overflow: hidden;
-        width: 100%;
-        height:0;
-        transition: .5s ease;
-                   }
-    
-     #about:hover #overlay{
-         width:1200%;
-         height:400%;
-         bottom:-400%;
-         left:-520%;
-         right:0;
-     }
-    #blur:hover{
-        filter:blur(3px);
-    }
-     #text {
+    setInterval(function () {
+      if(!start){
+    var red = randCol(255);
+    var green = randCol(255);
+    var blue = randCol(255);
+    var color = "background:rgb(" + red + "," + green + "," + blue + ");";
+    var element = document.getElementById("body");
 
-      color:darkred;
-      font-size: 20px;
-      position: absolute;
-      overflow: hidden;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-     -ms-transform: translate(-50%, -50%);
-      z-index:3;
+    element.style = color;
 }
-
-     #box {
-            position:absolute;
-            margin-left:40%;
-            margin-top:33%;
-            
+    }, 1000);</script>
+    <style>
+        #canvas {
+            width: 90%;
+            margin-top: 2%;
+            margin-left: 8%;
+           z-index:10;
         }
 
-        input[type=text]{
-            border:none;
-            
-            padding-top:10%;
-            padding-left:5%;
-            padding-bottom:6%;
-            border-radius:6px;
-            font-size:1.4375em;
-           opacity:0.6;
-          transition:color 2s ease-out, background-color 2s ease-out;
+
+        #body {
+            position: relative;
+            background-color: #FF9933;
+            transition: 1s;
         }
 
-        input:hover{
-            background-color:#C09396;
-             
-          transition: color 2s ease-in, background-color 2s ease-out;
-             
+        a {
+            font-family: "Times New Roman", Times, serif;
+            color: #f5f5f5;
+            text-decoration: none;
         }
+         button {
+            font-family: "Times New Roman", Times, serif;
+            color: #f5f5f5;
+            text-decoration: none;
+        }
+
+        #button:hover {
+            filter: blur(2px);
+        }
+
+        #button {
+            position: absolute;
+            border: solid 1px #f5f5f5;
+            font-size: 100px;
+            margin-top: 40%;
+            margin-left: 40%;
+            margin-right: 40%;
+            background-color:inherit;
+        }
+
+
+
+
+        #about {
+            position: fixed;
+            color: #f5f5f5;
+            margin-top: 3%;
+            margin-left: 45%;
+            font-size: 250%;
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        #overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #F5F5F5;
+            opacity: 0.3;
+            overflow: hidden;
+            width: 100%;
+            height: 0;
+            transition: .5s ease;
+        }
+
+        #about:hover #overlay {
+            width: 1200%;
+            height: 400%;
+            bottom: -400%;
+            left: -520%;
+            right: 0;
+        }
+
+        #blur:hover {
+            filter: blur(3px);
+        }
+
+        #text {
+            color: darkred;
+            font-size: 20px;
+            position: absolute;
+            overflow: hidden;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+
+        #box {
+            position: absolute;
+            margin-left: 40%;
+            margin-top: 33%;
+        }
+
+        input[type=text] {
+            border: none;
+            padding-top: 10%;
+            padding-left: 5%;
+            padding-bottom: 6%;
+            border-radius: 6px;
+            font-size: 1.4375em;
+            opacity: 0.6;
+            transition: color 2s ease-out, background-color 2s ease-out;
+        }
+
+        input:hover {
+            background-color: #C09396;
+            transition: color 2s ease-in, background-color 2s ease-out;
+        }
+		#myScore, #score{
+
+		font-size:30px;
+		color:#f5f5f5;
+		display:none;
+		}
+		#myScore{
+		margin-left:32%;
+		margin-top:-20%;
+		}
+
+
     </style>
-  
 </head>
+<body id="body">
+    <div id="foo">
+        <div id="box">
+            <input id="input" type="text" placeholder="Enter Your Name..." />
+        </div>
+        <div id="buttonDiv" >
+            <button id="button" onclick="myFunction(); drawanimate(); bgMusic(); mYscore();">START</button>
+        </div>
+        <div id="about">
+            <a id="blur" href="">ABOUT</a><hr />
+            <div id="overlay">
+                <div id="text">
 
-  <body id="body">
-    <div id="box">
-        <input id="input" type="text" placeholder="Enter Your Name..." />
-    </div>
-    <div id="button">
-        <a href="http://paletton.com/#uid=10u0u0kzyPykuRpqBQkOdD8MAqw">START</a>
-     </div>
-    <div id="about">
-        <a id="blur" href="">ABOUT</a><hr />
-        <div id="overlay">
-           <div id="text">
-               
 
-               Flamingos are famous for their bright pink feathers, stilt-like legs, and S-shaped neck. When a flamingo spots potential dinner—favorite foods include shrimp, snails, and plantlike water organisms called algae—it plunges its head into the water, twists it upside down, and scoops the fish using its upper beak like a shovel. They are able to "run" on water, thanks to their webbed feet, to gain speed before lifting up into the sky. 
+                    Flamingos are famous for their bright pink feathers, stilt-like legs, and S-shaped neck. When a flamingo spots potential dinner—favorite foods include shrimp, snails, and plantlike water organisms called algae—it plunges its head into the water, twists it upside down, and scoops the fish using its upper beak like a shovel. They are able to "run" on water, thanks to their webbed feet, to gain speed before lifting up into the sky.
+                </div>
             </div>
         </div>
     </div>
-  <canvas id="canvas" width="1000" height="1000"></canvas>
-<script src="game.js" type="text/javascript"></script>
 
+	<p id="myScore"> Score:</p><p id="score"> </p>
+	</div>
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+    <script src="game.js"> </script>
 </body>
+</html>
