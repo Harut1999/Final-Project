@@ -1,60 +1,58 @@
-// Violeta
-// this is for the random color page 
-        const randCol = function () {
-           return Math.round(Math.random() * 255);
-
-        }
-        setInterval(function () {
-            var red = randCol(255);
-            var green = randCol(255);
-            var blue = randCol(255);
-           var color = "background:rgb(" + red + "," + green + "," + blue + ");";
-           var element = document.getElementById("body");
-           
-          element.style = color;
-      }, 1000);
-        debugger;
-   
-// it ends here
-
-
 const canvas=document.getElementById('canvas')
 const ctx=canvas.getContext("2d")
 canvas.width= window.innerWidth;
 canvas.height=window.innerHeight;
-let start=true;
+let start=false;
 
+// background music
 
+const bgMusic=function(){
+var audio = new Audio('bgmusic.mp3');
+audio.play();
+}
+
+const mYscore=function () {
+    var x = document.getElementById("myScore");
+    x.style.display = "inline";
+     var y=document.getElementById("score");
+	  y.style.display = "inline";
+    }
+
+// Violeta start button
+const myFunction = function () {
+    document.getElementById("foo").style.display = "none";
+    start=true
+}
+// ends here
 const bg = {
-         x: (canvas.width-900)/2,
-         y:0
-       }
-  const bg2 = {
-         x:(canvas.width-900)/2,
-         y:canvas.height
-       }
+    x: (canvas.width - 900) / 2,
+    y: 0
+}
+const bg2 = {
+    x: (canvas.width - 900) / 2,
+    y: canvas.height
+}
 //Violeta
 
- const bgImage = new Image();
- bgImage.src = "https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__340.jpg";
+const bgImage = new Image();
+bgImage.src = "https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__340.jpg";
 
- const bgImage2 = new Image();
- bgImage2.src = "https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__340.jpg";
+const bgImage2 = new Image();
+bgImage2.src = "https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__340.jpg";
 
 const drawBack = function () {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(bgImage, 0,0, bgImage.width, bgImage.height, bg.x, bg.y, 900, canvas.height);
-            ctx.drawImage(bgImage2,0,0, bgImage2.width, bgImage2.height, bg2.x, bg2.y, 900, canvas.height);
-        }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(bgImage, 0, 0, bgImage.width, bgImage.height, bg.x, bg.y, 900, canvas.height);
+    ctx.drawImage(bgImage2, 0, 0, bgImage2.width, bgImage2.height, bg2.x, bg2.y, 900, canvas.height);
+}
 const updateBack = function () {
-            bg.y-=level("bg");
-            bg2.y-=level("bg");
-           if (bg2.y<= 0) {
-              bg.y = 0;
-              bg2.y = canvas.height;
-           }
-        }
-
+    bg.y -= level("bg");
+    bg2.y -= level("bg");
+    if (bg2.y <= 0) {
+        bg.y = 0;
+        bg2.y = canvas.height;
+    }
+}
 //Harut-stones
 const rand = function(num) {
   return Math.floor(Math.random()*num) + 1;
@@ -77,7 +75,7 @@ const level=function(str){
     return Math.min(2+Math.floor(score/90), 7)
   }
   else if(str==="stoneSpeed"){
-    return Math.min(Math.floor(rand(200)/10)/10+0.5+Math.floor(score/80)/2, 7)
+    return Math.min(rand(200)/100+0.5+Math.floor(score/80)/2, 7)
   }
   else if(str==="stoneNum")
     return Math.min(rand(4)+Math.floor(score/120), 7)
@@ -215,6 +213,7 @@ const drawStones=function(){
   }
 }
 const updateStones=function(){
+  document.getElementById("score").innerHTML=score;
   //Ani-hero
   if(hero.y<=10){
     hero.y = 10;
@@ -244,6 +243,8 @@ const updateStones=function(){
     for(let k=bull.length-1; k>=0; k--){
       if (array[i][j].img!==heartImg && !bull[k].hide && !array[i][j].hide && bull[k].x <= array[i][j].x + array[i][j].width  && bull[k].x + bull[k].width  >= array[i][j].x &&
      bull[k].y <= array[i][j].y + array[i][j].height && bull[k].y + bull[k].height >= array[i][j].y){
+       var audio = new Audio('shoot.mp3');
+       audio.play();
        array[i][j].hide=true;
        bull[k].hide=true;
        var a=new explosion();
@@ -263,14 +264,14 @@ const updateStones=function(){
       bullBadGuy.length++;
       bullBadGuy[bullBadGuy.length-1]=badBullet;
     }
-    if(!hero.collided && !array[i][j].hide && hero.x < array[i][j].x + array[i][j].width &&  hero.x + hero.width > array[i][j].x &&
+    if(!array[i][j].hide && hero.x < array[i][j].x + array[i][j].width &&  hero.x + hero.width > array[i][j].x &&
        hero.y + hero.height > array[i][j].y  && hero.y < array[i][j].y + array[i][j].height){
          //Elina-heart
          if(array[i][j].img===heartImg){
            hearts++;
            score+=10;
          }
-         else{
+         else if(!hero.collided){
            hearts--;
            hero.collided=true;
            var a=new explosion();
@@ -358,15 +359,15 @@ document.addEventListener('keydown', function(event) {
 }, false);
 
 
-const animate=function(){
+const drawanimate=function(){
   if(start){
   drawBack();
   drawStones();
   updateBack();
   updateStones();
 }
-  requestAnimationFrame(animate);
+  requestAnimationFrame(drawanimate);
 
 }
 
-animate();
+drawanimate();
