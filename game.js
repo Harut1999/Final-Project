@@ -2,7 +2,8 @@ const canvas=document.getElementById('canvas')
 const ctx=canvas.getContext("2d")
 canvas.width= window.innerWidth;
 canvas.height=window.innerHeight;
-let start=false;
+let start=false
+let gameover=false;
 
 // background music
 
@@ -53,6 +54,7 @@ const updateBack = function () {
         bg2.y = canvas.height;
     }
 }
+
 //Harut-stones
 const rand = function(num) {
   return Math.floor(Math.random()*num) + 1;
@@ -69,16 +71,26 @@ badGuyImg.src="BadGuyImage.png"
 
 const heartImg=new Image();
 heartImg.src="heart.png"
+
+const gameOverImg=new Image();
+gameOverImg.src="gameOverBack.png"
+
+const drawGameOver=function(){
+	ctx.drawImage(gameOverImg, 400, 600, 300, 300)
+	document.getElementById("par").innerHTML=document.getElementById("input").value + "  your score is  "+score;
+
+}
+
 //create stones
 const level=function(str){
   if(str==="bg"){
     return Math.min(2+Math.floor(score/90), 7)
   }
   else if(str==="stoneSpeed"){
-    return Math.min(rand(200)/100+0.5+Math.floor(score/80)/2, 7)
+    return Math.min(rand(150)/100+0.5+Math.floor(score/80)/2, 7)
   }
   else if(str==="stoneNum")
-    return Math.min(rand(4)+Math.floor(score/120), 7)
+    return Math.min(rand(4+Math.floor(score/120)), 7)
 }
 const array=[];
 const explosionArr=[];
@@ -88,8 +100,8 @@ const createPoints=function(count, image){
       if(num===0)
         return [];
       arr[num-1]={
-        x: (rand(10))*80+(canvas.width-900)/2,
-        y: (canvas.height-700)/2-100,
+        x: (rand(10))*80+(canvas.width-1000)/2,
+        y: (canvas.height-1000)/2-100,
         width: 70,
         height: 70,
         img: image,
@@ -116,7 +128,7 @@ const hero = {
   xDelta: 0,
   yDelta: 0,
   opacity: 1,
-  opacityDelta: -0.04,
+  opacityDelta: -0.03,
   collided: false
 
 };
@@ -223,8 +235,8 @@ const updateStones=function(){
   }
   //Elina-heart
   if(hearts<=0){
-    alert("Game over")
-    start=false;
+	  start=false
+    gameover=true;
   }
   //Harut-stones
   for(let i=array.length-1; i>=0; i--){
@@ -243,7 +255,7 @@ const updateStones=function(){
     for(let k=bull.length-1; k>=0; k--){
       if (array[i][j].img!==heartImg && !bull[k].hide && !array[i][j].hide && bull[k].x <= array[i][j].x + array[i][j].width  && bull[k].x + bull[k].width  >= array[i][j].x &&
      bull[k].y <= array[i][j].y + array[i][j].height && bull[k].y + bull[k].height >= array[i][j].y){
-       var audio = new Audio('shoot.mp3');
+       var audio = new Audio('shoot.wav')
        audio.play();
        array[i][j].hide=true;
        bull[k].hide=true;
@@ -365,7 +377,11 @@ const drawanimate=function(){
   drawStones();
   updateBack();
   updateStones();
+  
 }
+  else if(gameover){
+  	drawGameOver();
+  }
   requestAnimationFrame(drawanimate);
 
 }
