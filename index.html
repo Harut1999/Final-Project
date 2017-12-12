@@ -83,7 +83,7 @@ element.style = color;
             left: 0;
             right: 0;
             background-color: #F5F5F5;
-            opacity: 1;
+            opacity: 0.8;
             overflow: hidden;
             width: 100%;
             height: 0;
@@ -250,6 +250,19 @@ element.style = color;
             
             
         }
+        #restart{
+            position: absolute;
+            z-index: 1;
+            margin-left:74%;
+            margin-top: 48%;
+            color: black;
+            font-size: 18px;
+            background-color: #555555;
+            color: white;
+            border-radius: 8px;
+            display: none;
+
+        }
 
 
 
@@ -262,6 +275,7 @@ element.style = color;
     </style>
 </head>
 <body id="body">
+    <button  id="restart" type="button" onclick="re();">RESTART</button>
 
     <div id="foo">
 
