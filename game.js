@@ -76,8 +76,8 @@ const gameOverImg=new Image();
 gameOverImg.src="gameOverBack.png"
 
 const drawGameOver=function(){
-	ctx.drawImage(gameOverImg, 400, 600, 300, 300)
-	document.getElementById("par").innerHTML=document.getElementById("input").value + "  your score is  "+score;
+	ctx.drawImage(gameOverImg, 340, 100, 800, 450)
+	document.getElementById("par").innerHTML=document.getElementById("input").value + ",  Your score is  "+score;
 
 }
 
@@ -121,8 +121,8 @@ const createPoints=function(count, image){
 
 //Anihero moves
 const hero = {
-  x: 570,
-  y: 550,
+  x: 620,
+  y: 620,
   width: 110,
   height: 110,
   xDelta: 0,
@@ -134,7 +134,7 @@ const hero = {
 };
 
 const bulletImg=new Image();
-bulletImg.src="laser.png"
+
 const bull=[];
 const bullBadGuy=[]
 function bullet(){
@@ -157,7 +157,27 @@ function explosion(){
 }
 
 const heroImg = new Image();
-heroImg.src = "ship1.png";
+
+const img1 =function(){
+  heroImg.src = "ship1.png";
+  bulletImg.src="laser.png"
+} 
+const img2=function(){
+  heroImg.src = "ship2.png";
+  bulletImg.src="Red_laser.png";
+
+}
+const img3=function(){
+  heroImg.src = "ship3.png";
+  bulletImg.src="laser.png"
+
+}
+const img4=function(){
+  heroImg.src = "ship4.png";
+  bulletImg.src="Red_laser.png";
+
+
+}
 
 const fillArray=function(array){
 	array.length+=1;
@@ -255,7 +275,7 @@ const updateStones=function(){
     for(let k=bull.length-1; k>=0; k--){
       if (array[i][j].img!==heartImg && !bull[k].hide && !array[i][j].hide && bull[k].x <= array[i][j].x + array[i][j].width  && bull[k].x + bull[k].width  >= array[i][j].x &&
      bull[k].y <= array[i][j].y + array[i][j].height && bull[k].y + bull[k].height >= array[i][j].y){
-       var audio = new Audio('shoot.wav')
+       var audio = new Audio('shoot.mp3')
        audio.play();
        array[i][j].hide=true;
        bull[k].hide=true;
@@ -337,21 +357,21 @@ const downKey = 40;
 
 document.addEventListener('keydown', function(event) { //heros actions with keys
         if(event.keyCode === rightKey) {
-            hero.x = hero.x + 17;
+            hero.x = hero.x + 25;
             if(hero.x +hero.width>= (canvas.width+900)/2){
                 hero.x = (canvas.width+900)/2-hero.width;
             }
 
         } else if(event.keyCode === leftKey){
-            hero.x = hero.x - 17;
+            hero.x = hero.x - 25;
             if(hero.x < (canvas.width-900)/2){
                 hero.x = (canvas.width-900)/2;
             }
 
         } else if(event.keyCode === upKey){
-            hero.y = hero.y -17;
+            hero.y = hero.y -25;
         }else if(event.keyCode === downKey){
-          hero.y = hero.y +17;
+          hero.y = hero.y +25;
         }
     }, false);
 
