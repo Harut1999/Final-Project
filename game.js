@@ -22,7 +22,9 @@ const mYscore=function () {
 // Violeta start button
 const myFunction = function () {
     document.getElementById("foo").style.display = "none";
-    start=true
+    start=true;
+    var re = document.getElementById("restart");
+    re.style.display = "inline";
 }
 // ends here
 const bg = {
@@ -203,6 +205,10 @@ fillArray(array);
 
 const explosionImg=new Image();
 explosionImg.src="explosion.png"
+
+const re = function(){
+	location.reload();
+}
 
 
 const drawStones=function(){
