@@ -378,21 +378,21 @@ const downKey = 40;
 
 document.addEventListener('keydown', function(event) { //heros actions with keys
         if(event.keyCode === rightKey) {
-            hero.x = hero.x + 25;
+            hero.x = hero.x + 40;
             if(hero.x +hero.width>= (canvas.width+900)/2){
                 hero.x = (canvas.width+900)/2-hero.width;
             }
 
         } else if(event.keyCode === leftKey){
-            hero.x = hero.x - 25;
+            hero.x = hero.x - 40;
             if(hero.x < (canvas.width-900)/2){
                 hero.x = (canvas.width-900)/2;
             }
 
         } else if(event.keyCode === upKey){
-            hero.y = hero.y -25;
+            hero.y = hero.y -40;
         }else if(event.keyCode === downKey){
-          hero.y = hero.y +25;
+          hero.y = hero.y +40;
         }
     }, false);
 
