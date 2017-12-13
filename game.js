@@ -92,7 +92,7 @@ const level=function(str){
     return Math.min(rand(150)/100+0.5+Math.floor(score/80)/2, 7)
   }
   else if(str==="stoneNum")
-    return Math.min(rand(4+Math.floor(score/120)), 7)
+    return Math.min(rand(4)+Math.floor(score/120), 7)
 }
 const array=[];
 const explosionArr=[];
@@ -164,7 +164,7 @@ const heroImg = new Image();
 const img1 =function(){
   heroImg.src = "ship1.png";
   bulletImg.src="laser.png"
-} 
+}
 const img2=function(){
   heroImg.src = "ship2.png";
   bulletImg.src="Red_laser.png";
@@ -215,6 +215,21 @@ const re = function(){
 
 
 const drawStones=function(){
+  for(let i=0; i<explosionArr.length; i++){
+      if(explosionArr[i].imgSx===900){
+        if(explosionArr[i].imgSy!==900){
+          explosionArr[i].imgSx=0
+          explosionArr[i].imgSy+=100
+      }
+      else if(hero.gameEnd){
+      start=false;
+      gameover=true
+
+      }
+    }
+      ctx.drawImage(explosionImg, explosionArr[i].imgSx, explosionArr[i].imgSy, 100,100, explosionArr[i].imgDx, explosionArr[i].imgDy, explosionArr[i].imgwidth, explosionArr[i].imgheight)
+      explosionArr[i].imgSx+=100
+    }
   ctx.globalAlpha = hero.opacity;
   if(!hero.hide){
   ctx.drawImage(heroImg, hero.x, hero.y, hero.width, hero.height);
@@ -236,23 +251,8 @@ const drawStones=function(){
     ctx.drawImage(bulletImg, bull[i].x,bull[i].y, bull[i].width,bull[i].height)
   }
   }
-  for(let i=0; i<explosionArr.length; i++){
-      if(explosionArr[i].imgSx===900){
-        if(explosionArr[i].imgSy!==900){
-          explosionArr[i].imgSx=0
-          explosionArr[i].imgSy+=100
-      }
-      else if(hero.gameEnd){
-      hero.hide=true
-      start=false;
-      gameover=true
 
-      }
-    }
-      ctx.drawImage(explosionImg, explosionArr[i].imgSx, explosionArr[i].imgSy, 100,100, explosionArr[i].imgDx, explosionArr[i].imgDy, explosionArr[i].imgwidth, explosionArr[i].imgheight)
-      explosionArr[i].imgSx+=100
-    }
-    
+
   for(let i=0; i<bullBadGuy.length; i++){
     if(!bullBadGuy[i].hide)
     ctx.drawImage(bulletImg, bullBadGuy[i].x,bullBadGuy[i].y, bullBadGuy[i].width,bullBadGuy[i].height)
@@ -271,13 +271,14 @@ const updateStones=function(){
     hero.y = canvas.height-hero.height;
   }
   //Elina-heart
-  if(hearts<=0){
+  if(hearts===0 && !hero.gameEnd){
     var a=new explosion();
-           a.imgDx=hero.x
-           a.imgDy=hero.y
-           explosionArr.length++;
-           explosionArr[explosionArr.length-1]=a;
-	         hero.gameEnd=true;
+    a.imgDx=hero.x
+    a.imgDy=hero.y
+    explosionArr.length++;
+    explosionArr[explosionArr.length-1]=a;
+	  hero.gameEnd=true;
+    hero.hide=true
   }
   //Harut-stones
   for(let i=array.length-1; i>=0; i--){
@@ -378,21 +379,21 @@ const downKey = 40;
 
 document.addEventListener('keydown', function(event) { //heros actions with keys
         if(event.keyCode === rightKey) {
-            hero.x = hero.x + 40;
+            hero.x = hero.x + 25;
             if(hero.x +hero.width>= (canvas.width+900)/2){
                 hero.x = (canvas.width+900)/2-hero.width;
             }
 
         } else if(event.keyCode === leftKey){
-            hero.x = hero.x - 40;
+            hero.x = hero.x - 25;
             if(hero.x < (canvas.width-900)/2){
                 hero.x = (canvas.width-900)/2;
             }
 
         } else if(event.keyCode === upKey){
-            hero.y = hero.y -40;
+            hero.y = hero.y -25;
         }else if(event.keyCode === downKey){
-          hero.y = hero.y +40;
+          hero.y = hero.y +25;
         }
     }, false);
 
@@ -418,7 +419,7 @@ const drawanimate=function(){
   drawStones();
   updateBack();
   updateStones();
-  
+
 }
   else if(gameover){
   	drawGameOver();
@@ -428,5 +429,3 @@ const drawanimate=function(){
 }
 
 drawanimate();
-
- 
