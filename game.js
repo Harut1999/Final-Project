@@ -324,6 +324,7 @@ const updateStones=function(){
          if(array[i][j].img===heartImg){
            hearts++;
            score+=10;
+           array[i][j].hide=true
          }
          else if(!hero.collided){
            hearts--;
@@ -333,8 +334,9 @@ const updateStones=function(){
            a.imgDy=array[i][j].y
            explosionArr.length++;
            explosionArr[explosionArr.length-1]=a;
+           array[i][j].hide=true
          }
-            array[i][j].hide=true
+
     }
     if((array[i][j].y>=canvas.height || array[i][j].hide)&& array[i].length!==1){
         array[i].splice(j,1)
