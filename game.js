@@ -23,9 +23,7 @@ const mYscore=function () {
 const myFunction = function () {
     document.getElementById("foo").style.display = "none";
     start=true;
-    var re = document.getElementById("restart");
-    re.style.display = "inline";
-}
+   }
 // ends here
 const bg = {
     x: (canvas.width - 900) / 2,
@@ -78,8 +76,10 @@ const gameOverImg=new Image();
 gameOverImg.src="gameOverBack.png"
 
 const drawGameOver=function(){
-	ctx.drawImage(gameOverImg, 340, 100, 800, 450)
-	document.getElementById("par").innerHTML=document.getElementById("input").value + ",  Your score is  "+score;
+	 var re = document.getElementById("restart");
+    re.style.display = "inline";
+  ctx.drawImage(gameOverImg, (canvas.width)/2-400, (canvas.height-500)/2, 800, 450)
+	document.getElementById("par").innerHTML=document.getElementById("input").value + "  your score is  "+score;
 
 }
 
@@ -131,8 +131,9 @@ const hero = {
   yDelta: 0,
   opacity: 1,
   opacityDelta: -0.03,
-  collided: false
-
+  collided: false,
+  gameEnd: false,
+  hide: false
 };
 
 const bulletImg=new Image();
@@ -180,6 +181,8 @@ const img4=function(){
 
 
 }
+heroImg.src = "ship2.png";
+bulletImg.src="Red_laser.png";
 
 const fillArray=function(array){
 	array.length+=1;
@@ -213,7 +216,9 @@ const re = function(){
 
 const drawStones=function(){
   ctx.globalAlpha = hero.opacity;
+  if(!hero.hide){
   ctx.drawImage(heroImg, hero.x, hero.y, hero.width, hero.height);
+  }
   ctx.globalAlpha = 1.0;
   array.forEach(function(point){
     point.forEach(function(place){
@@ -237,11 +242,17 @@ const drawStones=function(){
           explosionArr[i].imgSx=0
           explosionArr[i].imgSy+=100
       }
+      else if(hero.gameEnd){
+      hero.hide=true
+      start=false;
+      gameover=true
+
+      }
     }
       ctx.drawImage(explosionImg, explosionArr[i].imgSx, explosionArr[i].imgSy, 100,100, explosionArr[i].imgDx, explosionArr[i].imgDy, explosionArr[i].imgwidth, explosionArr[i].imgheight)
       explosionArr[i].imgSx+=100
     }
-
+    
   for(let i=0; i<bullBadGuy.length; i++){
     if(!bullBadGuy[i].hide)
     ctx.drawImage(bulletImg, bullBadGuy[i].x,bullBadGuy[i].y, bullBadGuy[i].width,bullBadGuy[i].height)
@@ -261,8 +272,12 @@ const updateStones=function(){
   }
   //Elina-heart
   if(hearts<=0){
-	  start=false
-    gameover=true;
+    var a=new explosion();
+           a.imgDx=hero.x
+           a.imgDy=hero.y
+           explosionArr.length++;
+           explosionArr[explosionArr.length-1]=a;
+	         hero.gameEnd=true;
   }
   //Harut-stones
   for(let i=array.length-1; i>=0; i--){
