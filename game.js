@@ -92,7 +92,7 @@ const level=function(str){
     return Math.min(rand(150)/100+0.5+Math.floor(score/80)/2, 7)
   }
   else if(str==="stoneNum")
-    return Math.min(rand(4)+Math.floor(score/120), 7)
+    return Math.min(rand(4)+Math.floor(score/100), 7)
 }
 const array=[];
 const explosionArr=[];
