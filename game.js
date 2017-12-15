@@ -263,13 +263,7 @@ const drawStones=function(){
 }
 const updateStones=function(){
   document.getElementById("score").innerHTML=score;
-  //Ani-hero
-  if(hero.y<=10){
-    hero.y = 10;
-  }
-  if(hero.y >=canvas.height-hero.height){
-    hero.y = canvas.height-hero.height;
-  }
+
   //Elina-heart
   if(hearts===0 && !hero.gameEnd){
     var a=new explosion();
@@ -377,6 +371,9 @@ const leftKey = 37;
 const upKey = 38;
 const rightKey = 39;
 const downKey = 40;
+ 
+  //Ani-hero
+ 
 
 
 document.addEventListener('keydown', function(event) { //heros actions with keys
@@ -393,9 +390,15 @@ document.addEventListener('keydown', function(event) { //heros actions with keys
             }
 
         } else if(event.keyCode === upKey){
-            hero.y = hero.y -25;
+            hero.y = hero.y -25; 
+		if(hero.y<=10){
+    			hero.y = 10;
+  		}
         }else if(event.keyCode === downKey){
           hero.y = hero.y +25;
+		  if(hero.y >=canvas.height-hero.height){
+    				hero.y = canvas.height-hero.height;
+  			}
         }
     }, false);
 
